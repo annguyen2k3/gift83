@@ -533,128 +533,39 @@ body {
   50%       { transform: translateX(-50%) translateY(-10px); }
 }
 
-/* ── Phase 3: Gifts ── */
-#s3-gifts {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(1.2rem, 3vh, 2.2rem);
-  padding: 1.5rem;
-  opacity: 0;
-  transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  background: radial-gradient(ellipse at 50% 38%, rgba(61, 0, 85, 0.45) 0%, transparent 68%);
-}
-
-#s3-gifts.visible { opacity: 1; }
-
+/* ── Gifts title (inside 3D sphere) ── */
 .s3-gifts-title {
   font-family: 'Dancing Script', cursive;
   font-size: clamp(1.3rem, 4vw, 2.1rem);
   color: #fff;
   text-shadow: 0 0 20px #FF4D8D, 0 0 50px rgba(255, 77, 141, 0.35);
   text-align: center;
+  white-space: nowrap;
   animation: s3TitleFloat 3s ease-in-out infinite;
 }
 
 @keyframes s3TitleFloat {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-6px); }
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(-6px); }
 }
 
-.s3-gifts-row {
-  display: flex;
-  gap: clamp(1.2rem, 4vw, 3.5rem);
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.s3-gift {
-  cursor: pointer;
-  animation: s3GiftFloat 3.5s ease-in-out infinite;
-}
-
-.s3-gift:nth-child(2) { animation-delay: -1.4s; }
-
-@keyframes s3GiftFloat {
-  0%, 100% { transform: translateY(0) rotate(-1deg); }
-  50%       { transform: translateY(-14px) rotate(1deg); }
-}
-
-.s3-gift-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.7rem;
-  padding: clamp(0.8rem, 2vw, 1.2rem);
-  border-radius: 20px;
-  background: rgba(255, 77, 141, 0.07);
-  border: 1px solid rgba(255, 77, 141, 0.22);
-  backdrop-filter: blur(10px);
-  transition:
-    transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    box-shadow 0.3s ease,
-    border-color 0.3s ease;
-  box-shadow: 0 0 22px rgba(255, 77, 141, 0.12);
-}
-
-.s3-gift:hover .s3-gift-inner,
-.s3-gift:active .s3-gift-inner {
-  transform: scale(1.08);
-  box-shadow: 0 0 50px rgba(255, 77, 141, 0.55), 0 0 100px rgba(255, 77, 141, 0.15);
-  border-color: #FF4D8D;
-}
-
-.s3-gift img {
-  width: clamp(110px, 22vw, 195px);
-  height: clamp(110px, 22vw, 195px);
-  object-fit: contain;
-  filter: drop-shadow(0 0 14px rgba(255, 77, 141, 0.5));
-  display: block;
-}
-
-.s3-gift-label {
+/* ── Gift selection hint ── */
+#s3-gift-hint {
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.88);
   font-family: 'Dancing Script', cursive;
-  font-size: clamp(0.9rem, 2.4vw, 1.2rem);
-  color: rgba(255, 255, 255, 0.92);
-  text-align: center;
-  text-shadow: 0 0 12px #FF4D8D;
-}
-
-.s3-card-graphic {
-  width: clamp(110px, 22vw, 195px);
-  height: clamp(110px, 22vw, 195px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.s3-card-graphic svg {
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 0 14px rgba(255, 77, 141, 0.55));
-}
-
-.s3-gifts-sparkles {
-  position: absolute;
-  inset: 0;
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  text-shadow: 0 0 18px #FF4D8D, 0 0 40px rgba(255, 77, 141, 0.4);
   pointer-events: none;
-  overflow: hidden;
-}
-
-.s3-sparkle {
-  position: absolute;
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+  z-index: 10;
   opacity: 0;
-  font-size: var(--sp-size, 10px);
-  color: #FFD700;
-  text-shadow: 0 0 8px #FFD700;
-  animation: s3SparkleAnim var(--sp-dur, 2s) var(--sp-delay, 0s) ease-in-out infinite;
+  transition: opacity 0.8s ease;
+  animation: s3HintFloat 2.5s ease-in-out infinite;
 }
 
-@keyframes s3SparkleAnim {
-  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
-  50%       { opacity: 0.95; transform: scale(1) rotate(180deg); }
-}
+#s3-gift-hint.visible { opacity: 1; }
