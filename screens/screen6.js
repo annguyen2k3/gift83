@@ -1,8 +1,13 @@
 const DEFAULT_AVATAR = "img/avatar_nu.jpg";
 const AUDIO_SRC = "audio/gift_music.mp3";
 const PARTICLE_COLORS = [
-    "#ff6eb4", "#e879f9", "#c084fc",
-    "#ffffff", "#fecdd3", "#f472b6", "#ddd6fe",
+    "#ff6eb4",
+    "#e879f9",
+    "#c084fc",
+    "#ffffff",
+    "#fecdd3",
+    "#f472b6",
+    "#ddd6fe",
 ];
 
 /* ═══════════════════════════════════════════════════════════════
@@ -52,7 +57,9 @@ export function initScreen6(container, onBack) {
         r: Math.random() * 2 + 0.5,
         vx: (Math.random() - 0.5) * 0.4,
         vy: (Math.random() - 0.5) * 0.4,
-        color: PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)],
+        color: PARTICLE_COLORS[
+            Math.floor(Math.random() * PARTICLE_COLORS.length)
+        ],
         alpha: Math.random() * 0.5 + 0.1,
         aDir: Math.random() > 0.5 ? 1 : -1,
         aSpd: Math.random() * 0.006 + 0.002,
@@ -66,8 +73,14 @@ export function initScreen6(container, onBack) {
             p.x += p.vx;
             p.y += p.vy;
             p.alpha += p.aSpd * p.aDir;
-            if (p.alpha > 0.7) { p.alpha = 0.7; p.aDir = -1; }
-            if (p.alpha < 0.05) { p.alpha = 0.05; p.aDir = 1; }
+            if (p.alpha > 0.7) {
+                p.alpha = 0.7;
+                p.aDir = -1;
+            }
+            if (p.alpha < 0.05) {
+                p.alpha = 0.05;
+                p.aDir = 1;
+            }
             if (p.x < -5) p.x = pCanvas.width + 5;
             if (p.x > pCanvas.width + 5) p.x = -5;
             if (p.y < -5) p.y = pCanvas.height + 5;
@@ -183,7 +196,10 @@ export function initScreen6(container, onBack) {
 
     function stopStars() {
         starsActive = false;
-        if (starTimer) { clearTimeout(starTimer); starTimer = null; }
+        if (starTimer) {
+            clearTimeout(starTimer);
+            starTimer = null;
+        }
         starsLayer.innerHTML = "";
     }
 

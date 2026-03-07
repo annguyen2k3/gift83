@@ -28,6 +28,12 @@ const POEMS = [
         "Mỗi ngày trôi qua đều là ngày",
         "hạnh phúc nhất...",
     ],
+    [
+        "Chúc {name} mùng 8 tháng 3",
+        "Có đủ mọi thứ niềm vui trên đời",
+        "Sống một cuộc sống thảnh thơi",
+        "Tiền vào đầy ví, tiền vào đầy tim.",
+    ],
 ];
 
 function getRecipientName() {
