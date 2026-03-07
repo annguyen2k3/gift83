@@ -257,7 +257,7 @@ export function initScreen2(container, onComplete) {
 
   container.addEventListener('click',      advance);
   container.addEventListener('touchstart', advance, { passive: true });
-  const autoTimer = setTimeout(advance, 9000);
+  const autoTimer = setTimeout(advance, 5000);
 
   return function destroy() {
     stopFW();

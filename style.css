@@ -481,3 +481,228 @@ body {
   90%  { opacity: 0.7; }
   100% { opacity: 0; transform: translateY(112vh) rotate(var(--p-rot, 360deg)) translateX(var(--p-drift, 50px)); }
 }
+
+/* ════════════════════════════════
+   SCREEN 3
+════════════════════════════════ */
+
+#screen-3 {
+  background: linear-gradient(135deg, #0D0010 0%, #1A0025 50%, #0D0010 100%);
+  overflow: hidden;
+}
+
+/* ── Phase 1: Rose Heart ── */
+#s3-phase1 {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#s3-rose-heart {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.7);
+  width: min(82vw, 76vh);
+  max-width: 560px;
+  opacity: 0;
+  animation: s3HeartIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards;
+  filter: drop-shadow(0 0 35px rgba(255, 77, 141, 0.6));
+  pointer-events: none;
+}
+
+@keyframes s3HeartIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(0.85); }
+}
+
+@keyframes s3HeartBeat {
+  0%   { transform: translate(-50%, -50%) scale(0.85); filter: drop-shadow(0 0 32px rgba(255,77,141,0.6)); }
+  14%  { transform: translate(-50%, -50%) scale(1.00); filter: drop-shadow(0 0 65px rgba(255,77,141,1.0)); }
+  28%  { transform: translate(-50%, -50%) scale(0.85); filter: drop-shadow(0 0 32px rgba(255,77,141,0.6)); }
+  42%  { transform: translate(-50%, -50%) scale(0.95); filter: drop-shadow(0 0 52px rgba(255,77,141,0.88)); }
+  70%  { transform: translate(-50%, -50%) scale(0.85); filter: drop-shadow(0 0 32px rgba(255,77,141,0.6)); }
+  100% { transform: translate(-50%, -50%) scale(0.85); filter: drop-shadow(0 0 32px rgba(255,77,141,0.6)); }
+}
+
+#s3-rose-heart.beating {
+  animation: s3HeartBeat 0.88s ease-in-out infinite !important;
+}
+
+.s3-petal-fly {
+  position: fixed;
+  pointer-events: none;
+  z-index: 999;
+  will-change: transform, opacity;
+  border-radius: 2px;
+}
+
+/* ── Phase 2: Three.js Sphere ── */
+#s3-three-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+#s3-glow-aura {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 77, 141, 0.18) 0%, transparent 65%);
+  pointer-events: none;
+  animation: s3AuraPulse 3s ease-in-out infinite;
+}
+
+@keyframes s3AuraPulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+
+#s3-tap-hint {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.85);
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.1rem, 3.2vw, 1.6rem);
+  text-shadow: 0 0 18px #FF4D8D, 0 0 40px rgba(255, 77, 141, 0.4);
+  animation: s3HintFloat 2.5s ease-in-out infinite;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+}
+
+@keyframes s3HintFloat {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(-10px); }
+}
+
+/* ── Phase 3: Gifts ── */
+#s3-gifts {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.2rem, 3vh, 2.2rem);
+  padding: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background: radial-gradient(ellipse at 50% 38%, rgba(61, 0, 85, 0.45) 0%, transparent 68%);
+}
+
+#s3-gifts.visible { opacity: 1; }
+
+.s3-gifts-title {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.3rem, 4vw, 2.1rem);
+  color: #fff;
+  text-shadow: 0 0 20px #FF4D8D, 0 0 50px rgba(255, 77, 141, 0.35);
+  text-align: center;
+  animation: s3TitleFloat 3s ease-in-out infinite;
+}
+
+@keyframes s3TitleFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+.s3-gifts-row {
+  display: flex;
+  gap: clamp(1.2rem, 4vw, 3.5rem);
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.s3-gift {
+  cursor: pointer;
+  animation: s3GiftFloat 3.5s ease-in-out infinite;
+}
+
+.s3-gift:nth-child(2) { animation-delay: -1.4s; }
+
+@keyframes s3GiftFloat {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50%       { transform: translateY(-14px) rotate(1deg); }
+}
+
+.s3-gift-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  padding: clamp(0.8rem, 2vw, 1.2rem);
+  border-radius: 20px;
+  background: rgba(255, 77, 141, 0.07);
+  border: 1px solid rgba(255, 77, 141, 0.22);
+  backdrop-filter: blur(10px);
+  transition:
+    transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  box-shadow: 0 0 22px rgba(255, 77, 141, 0.12);
+}
+
+.s3-gift:hover .s3-gift-inner,
+.s3-gift:active .s3-gift-inner {
+  transform: scale(1.08);
+  box-shadow: 0 0 50px rgba(255, 77, 141, 0.55), 0 0 100px rgba(255, 77, 141, 0.15);
+  border-color: #FF4D8D;
+}
+
+.s3-gift img {
+  width: clamp(110px, 22vw, 195px);
+  height: clamp(110px, 22vw, 195px);
+  object-fit: contain;
+  filter: drop-shadow(0 0 14px rgba(255, 77, 141, 0.5));
+  display: block;
+}
+
+.s3-gift-label {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(0.9rem, 2.4vw, 1.2rem);
+  color: rgba(255, 255, 255, 0.92);
+  text-align: center;
+  text-shadow: 0 0 12px #FF4D8D;
+}
+
+.s3-card-graphic {
+  width: clamp(110px, 22vw, 195px);
+  height: clamp(110px, 22vw, 195px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.s3-card-graphic svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 14px rgba(255, 77, 141, 0.55));
+}
+
+.s3-gifts-sparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.s3-sparkle {
+  position: absolute;
+  opacity: 0;
+  font-size: var(--sp-size, 10px);
+  color: #FFD700;
+  text-shadow: 0 0 8px #FFD700;
+  animation: s3SparkleAnim var(--sp-dur, 2s) var(--sp-delay, 0s) ease-in-out infinite;
+}
+
+@keyframes s3SparkleAnim {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50%       { opacity: 0.95; transform: scale(1) rotate(180deg); }
+}
