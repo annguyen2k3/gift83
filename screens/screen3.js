@@ -194,7 +194,7 @@ function createCardCanvas() {
    Main 3D Scene
 ═══════════════════════════════════════ */
 
-function buildThreeScene(container, onSelectBouquet, onSelectCard) {
+function buildThreeScene(container, onSelectBouquet, onSelectCard, opts = {}) {
     const canvasEl = document.createElement("canvas");
     canvasEl.id = "s3-three-canvas";
     canvasEl.style.touchAction = "none";
@@ -402,29 +402,51 @@ function buildThreeScene(container, onSelectBouquet, onSelectCard) {
     scene.add(pointLight);
 
     /* ── Hover glow highlight ── */
-    const glowCanvas = document.createElement('canvas');
-    glowCanvas.width = 128; glowCanvas.height = 128;
-    const gCtx = glowCanvas.getContext('2d');
+    const glowCanvas = document.createElement("canvas");
+    glowCanvas.width = 128;
+    glowCanvas.height = 128;
+    const gCtx = glowCanvas.getContext("2d");
     const gGrad = gCtx.createRadialGradient(64, 64, 0, 64, 64, 64);
-    gGrad.addColorStop(0, 'rgba(255, 77, 141, 0.75)');
-    gGrad.addColorStop(0.35, 'rgba(255, 183, 209, 0.35)');
-    gGrad.addColorStop(1, 'rgba(255, 77, 141, 0)');
+    gGrad.addColorStop(0, "rgba(255, 77, 141, 0.75)");
+    gGrad.addColorStop(0.35, "rgba(255, 183, 209, 0.35)");
+    gGrad.addColorStop(1, "rgba(255, 77, 141, 0)");
     gCtx.fillStyle = gGrad;
     gCtx.fillRect(0, 0, 128, 128);
     const glowTex = new THREE.CanvasTexture(glowCanvas);
     const glowMat = new THREE.SpriteMaterial({
-      map: glowTex, transparent: true, opacity: 0, depthWrite: false,
-      blending: THREE.AdditiveBlending,
+        map: glowTex,
+        transparent: true,
+        opacity: 0,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
     });
     const glowSprite = new THREE.Sprite(glowMat);
     glowSprite.scale.set(1, 1, 1);
     scene.add(glowSprite);
 
     /* ── Gift selection hint ── */
-    const giftHint = document.createElement('div');
-    giftHint.id = 's3-gift-hint';
-    giftHint.textContent = '✨ Nhấn vào món quà muốn xem ✨';
+    const giftHint = document.createElement("div");
+    giftHint.id = "s3-gift-hint";
+    giftHint.textContent = "✨ Nhấn vào món quà muốn xem ✨";
     container.appendChild(giftHint);
+
+    /* ── Back button (gifts → rotate) ── */
+    const backBtn = document.createElement("button");
+    backBtn.id = "s3-back-btn";
+    backBtn.textContent = "<- Quay lại";
+    container.appendChild(backBtn);
+
+    backBtn.addEventListener("click", () => {
+        if (phase !== "gifts" || giftSelected) return;
+        giftClickable = false;
+        hoveredObj = null;
+        canvasEl.style.cursor = "default";
+        glowMat.opacity = 0;
+        backBtn.classList.remove("visible");
+        giftHint.classList.remove("visible");
+        phase = "unzoom";
+        unzoomStart = null;
+    });
 
     /* ── Resize ── */
     function onResize() {
@@ -490,15 +512,35 @@ function buildThreeScene(container, onSelectBouquet, onSelectCard) {
 
     /* ── Animation state ── */
     let rafId = null;
-    let phase = "intro";
+    let phase = opts.startAtGifts ? "gifts" : "intro";
     let introStart = null;
     let zoomStart = null;
+    let unzoomStart = null;
 
     const INTRO_DUR = 1400;
     const INTRO_FROM = 3.8;
     const ZOOM_DUR = 1800;
     const CAM_FROM = CAM_Z;
     const CAM_TO = 2.5;
+
+    if (opts.startAtGifts) {
+        camera.position.z = CAM_TO;
+        sphereGroup.scale.setScalar(4.5);
+        giftsGroup.scale.setScalar(1);
+        canvasEl.style.opacity = "1";
+        glowEl.style.opacity = "0.3";
+        hint.style.display = "none";
+        giftHint.classList.add("visible");
+        bouquetMat.opacity = 1;
+        cardMeshMat.opacity = 1;
+        discMeshMat.opacity = 1;
+        sparkMat.opacity = 0.7;
+        sprites.forEach((s) => {
+            s.material.opacity = 0.1;
+        });
+        giftClickable = true;
+        backBtn.classList.add("visible");
+    }
 
     function easeOutBack(t) {
         const c1 = 1.70158,
@@ -596,7 +638,8 @@ function buildThreeScene(container, onSelectBouquet, onSelectCard) {
             if (t >= 1) {
                 phase = "gifts";
                 hint.style.display = "none";
-                giftHint.classList.add('visible');
+                giftHint.classList.add("visible");
+                backBtn.classList.add("visible");
                 setTimeout(() => {
                     giftClickable = true;
                 }, 400);
@@ -649,13 +692,45 @@ function buildThreeScene(container, onSelectBouquet, onSelectCard) {
                 glowMat.opacity = pulse;
                 if (hoveredObj === bouquetSprite) {
                     const gs = bouquetBaseH * 1.6;
-                    glowSprite.scale.set(gs * bouquetSprite.userData.aspect, gs, 1);
+                    glowSprite.scale.set(
+                        gs * bouquetSprite.userData.aspect,
+                        gs,
+                        1,
+                    );
                 } else {
                     const gs = cardH * 2.2;
                     glowSprite.scale.set(gs, gs, 1);
                 }
             } else {
                 glowMat.opacity = 0;
+            }
+
+            /* — Unzoom: reverse zoom back to rotate — */
+        } else if (phase === "unzoom") {
+            if (!unzoomStart) unzoomStart = ts;
+            const elapsed = ts - unzoomStart;
+            const t = Math.min(elapsed / ZOOM_DUR, 1);
+            const et = easeOutCubic(t);
+
+            camera.position.z = lerpN(CAM_TO, CAM_FROM, et);
+            sphereGroup.scale.setScalar(lerpN(4.5, 1, et));
+
+            sprites.forEach((s) => {
+                s.material.opacity = lerpN(0.1, 1, et);
+            });
+
+            bouquetMat.opacity = lerpN(1, 0.85, et);
+            cardMeshMat.opacity = lerpN(1, 0.85, et);
+            discMeshMat.opacity = lerpN(1, 0.85, et);
+            sparkMat.opacity = lerpN(0.7, 0.5, et);
+
+            glowEl.style.opacity = lerpN(0.3, 1, et).toFixed(3);
+
+            if (t >= 1) {
+                phase = "rotate";
+                hint.style.display = "";
+                hint.style.opacity = "1";
+                clickEnabled = true;
             }
         }
 
@@ -672,8 +747,8 @@ function buildThreeScene(container, onSelectBouquet, onSelectCard) {
 
     function handleZoomClick() {
         if (!clickEnabled || phase !== "rotate" || dragMoved) return;
-        container.removeEventListener("click", handleZoomClick);
         phase = "zoom";
+        zoomStart = null;
     }
     container.addEventListener("click", handleZoomClick);
 
@@ -689,26 +764,13 @@ function buildThreeScene(container, onSelectBouquet, onSelectCard) {
         canvasEl.style.cursor = "default";
         const type = hits[0].object.userData.type;
 
-        /* Flash overlay transition */
-        const flash = document.createElement("div");
-        flash.style.cssText = `
-      position:fixed; inset:0; z-index:9999;
-      background:radial-gradient(circle,#fff5f8 0%,#FFB3D1 60%,#FF4D8D 100%);
-      opacity:0; pointer-events:none; transition:opacity 0.15s ease;
-    `;
-        document.body.appendChild(flash);
-        requestAnimationFrame(() => {
-            flash.style.opacity = "0.85";
-            setTimeout(() => {
-                flash.style.transition = "opacity 0.35s ease";
-                flash.style.opacity = "0";
-                setTimeout(() => {
-                    flash.remove();
-                    if (type === "bouquet") onSelectBouquet();
-                    else onSelectCard();
-                }, 380);
-            }, 160);
-        });
+        giftHint.classList.remove('visible');
+        backBtn.classList.remove('visible');
+
+        setTimeout(() => {
+            if (type === "bouquet") onSelectBouquet();
+            else onSelectCard();
+        }, 300);
     }
 
     canvasEl.addEventListener("click", (e) => {
@@ -750,7 +812,7 @@ function buildThreeScene(container, onSelectBouquet, onSelectCard) {
 /* ═══════════════════════════════════════
    Entry point
 ═══════════════════════════════════════ */
-export function initScreen3(container, onSelectBouquet, onSelectCard) {
+export function initScreen3(container, onSelectBouquet, onSelectCard, opts) {
     container.innerHTML = "";
     let destroyed = false;
 
@@ -762,6 +824,7 @@ export function initScreen3(container, onSelectBouquet, onSelectCard) {
         () => {
             if (!destroyed) onSelectCard();
         },
+        opts,
     );
 
     return function destroy() {

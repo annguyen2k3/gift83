@@ -36,7 +36,7 @@ export function initScreen1(container, onComplete) {
         </svg>
 
         <div class="s1-btn" id="s1-btn">
-          <span class="s1-btn-heart">♥</span>
+          <img class="s1-btn-heart" src="img/white_heart.png" alt="♥">
         </div>
       </div>
 
