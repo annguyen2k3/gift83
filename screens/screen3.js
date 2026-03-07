@@ -194,7 +194,13 @@ function createCardCanvas() {
    Main 3D Scene
 ═══════════════════════════════════════ */
 
-function buildThreeScene(container, onSelectBouquet, onSelectCard, opts = {}) {
+function buildThreeScene(
+    container,
+    onSelectBouquet,
+    onSelectCard,
+    onSelectDisc,
+    opts = {},
+) {
     const canvasEl = document.createElement("canvas");
     canvasEl.id = "s3-three-canvas";
     canvasEl.style.touchAction = "none";
@@ -348,7 +354,7 @@ function buildThreeScene(container, onSelectBouquet, onSelectCard, opts = {}) {
     const discGeo = new THREE.PlaneGeometry(discSize, discSize);
     const discMesh = new THREE.Mesh(discGeo, discMeshMat);
     discMesh.position.set(-SPHERE_R * 0.18, -SPHERE_R * 0.38, 0.15);
-    discMesh.userData = { type: "disc" };
+    discMesh.userData = { type: "disc", hoverScale: 1 };
     giftsGroup.add(discMesh);
 
     loader.load(DISC_IMG, (tex) => {
@@ -427,7 +433,7 @@ function buildThreeScene(container, onSelectBouquet, onSelectCard, opts = {}) {
     /* ── Gift selection hint ── */
     const giftHint = document.createElement("div");
     giftHint.id = "s3-gift-hint";
-    giftHint.textContent = "✨ Nhấn vào món quà muốn xem ✨";
+    giftHint.textContent = "✨ Nhấn vào các món quà để khám phá nhé! ✨";
     container.appendChild(giftHint);
 
     /* ── Back button (gifts → rotate) ── */
@@ -660,6 +666,7 @@ function buildThreeScene(container, onSelectBouquet, onSelectCard, opts = {}) {
                 const hits = raycaster.intersectObjects([
                     bouquetSprite,
                     cardMesh,
+                    discMesh,
                 ]);
                 const newH = hits.length > 0 ? hits[0].object : null;
                 if (newH !== hoveredObj) {
@@ -669,7 +676,7 @@ function buildThreeScene(container, onSelectBouquet, onSelectCard, opts = {}) {
             }
 
             /* Hover scale lerp */
-            [bouquetSprite, cardMesh].forEach((obj) => {
+            [bouquetSprite, cardMesh, discMesh].forEach((obj) => {
                 const target = obj === hoveredObj && !giftSelected ? 1.2 : 1;
                 const cur = obj.userData.hoverScale;
                 const next = cur + (target - cur) * 0.08;
@@ -757,7 +764,11 @@ function buildThreeScene(container, onSelectBouquet, onSelectCard, opts = {}) {
         if (!giftClickable || giftSelected) return;
         updateMouse(e);
         raycaster.setFromCamera(mouse, camera);
-        const hits = raycaster.intersectObjects([bouquetSprite, cardMesh]);
+        const hits = raycaster.intersectObjects([
+            bouquetSprite,
+            cardMesh,
+            discMesh,
+        ]);
         if (hits.length === 0) return;
 
         giftSelected = true;
@@ -769,7 +780,8 @@ function buildThreeScene(container, onSelectBouquet, onSelectCard, opts = {}) {
 
         setTimeout(() => {
             if (type === "bouquet") onSelectBouquet();
-            else onSelectCard();
+            else if (type === "card") onSelectCard();
+            else if (type === "disc") onSelectDisc();
         }, 300);
     }
 
@@ -812,7 +824,13 @@ function buildThreeScene(container, onSelectBouquet, onSelectCard, opts = {}) {
 /* ═══════════════════════════════════════
    Entry point
 ═══════════════════════════════════════ */
-export function initScreen3(container, onSelectBouquet, onSelectCard, opts) {
+export function initScreen3(
+    container,
+    onSelectBouquet,
+    onSelectCard,
+    onSelectDisc,
+    opts,
+) {
     container.innerHTML = "";
     let destroyed = false;
 
@@ -823,6 +841,9 @@ export function initScreen3(container, onSelectBouquet, onSelectCard, opts) {
         },
         () => {
             if (!destroyed) onSelectCard();
+        },
+        () => {
+            if (!destroyed) onSelectDisc();
         },
         opts,
     );

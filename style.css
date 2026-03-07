@@ -975,6 +975,10 @@ body {
     transform: translateY(0);
 }
 
+.s5-poem-spacer {
+    height: clamp(4px, 1vw, 8px);
+}
+
 /* ── Signature ── */
 .s5-signature {
     font-family: "Dancing Script", cursive;
@@ -1309,4 +1313,415 @@ body {
 .s4-btns.s4-in ~ .s4-desc {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* ════════════════════════════════
+   SCREEN 6 – Trình phát video / Đĩa nhạc
+════════════════════════════════ */
+
+#screen-6 {
+    background: linear-gradient(135deg, #0d0010 0%, #1a0025 50%, #0d0010 100%);
+    overflow: hidden;
+}
+
+.s6-particle-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.s6-wrapper {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1;
+}
+
+.s6-player {
+    width: min(92vw, 500px);
+    border-radius: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    overflow: hidden;
+    background: #0a0a0a;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.6),
+        0 0 20px rgba(255, 77, 141, 0.1);
+}
+
+.s6-display {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #000;
+}
+
+.s6-phase {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    overflow: hidden;
+}
+
+/* ── Diamond / Argyle Background ── */
+
+.s6-diamond-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-color: #f5c8d8;
+    background-image:
+        linear-gradient(
+            45deg,
+            #eab4c8 25%,
+            transparent 25%,
+            transparent 75%,
+            #eab4c8 75%
+        ),
+        linear-gradient(
+            45deg,
+            #eab4c8 25%,
+            transparent 25%,
+            transparent 75%,
+            #eab4c8 75%
+        );
+    background-size: 30px 30px;
+    background-position:
+        0 0,
+        15px 15px;
+}
+
+/* ── Header (8/3 + Happy Women's Day) ── */
+
+.s6-hdr {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    margin-bottom: clamp(2px, 1vw, 8px);
+}
+
+.s6-83 {
+    font-family: "Dancing Script", cursive;
+    font-size: clamp(2rem, 7vw, 3.5rem);
+    font-weight: 700;
+    color: #ff4d8d;
+    line-height: 1.1;
+    text-shadow:
+        2px 2px 0 #d63a75,
+        3px 3px 0 #b82d63;
+}
+
+.s6-hwd {
+    font-family: "Playfair Display", "Dancing Script", cursive;
+    font-size: clamp(0.55rem, 2vw, 1rem);
+    font-weight: 700;
+    color: #6b2d8b;
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 0 rgba(107, 45, 139, 0.25);
+}
+
+/* ── Notebook paper ── */
+
+.s6-notebook {
+    position: relative;
+    z-index: 1;
+    width: 82%;
+    padding: clamp(6px, 1.5vw, 14px) clamp(8px, 2.5vw, 18px);
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 3px;
+    box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.15);
+    background-image: repeating-linear-gradient(
+        transparent,
+        transparent 25px,
+        #d4c8c0 25px,
+        #d4c8c0 26px
+    );
+    background-position: 0 12px;
+}
+
+.s6-line {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-size: clamp(0.55rem, 2vw, 0.85rem);
+    font-weight: 700;
+    color: #6b2d8b;
+    text-align: center;
+    line-height: 26px;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+        opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.s6-line-show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.s6-line--accent {
+    color: #ff4d8d;
+}
+
+.s6-line--name {
+    color: #ff4d8d;
+    font-size: clamp(0.8rem, 3vw, 1.2rem);
+    font-style: italic;
+}
+
+/* ── Photo phase background image ── */
+
+.s6-bg-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ── Polaroid / Torn Paper Frame ── */
+
+.s6-polaroid {
+    position: relative;
+    z-index: 1;
+    background: #f5f0eb;
+    padding: clamp(8px, 2vw, 14px);
+    transform: rotate(-4deg) translateY(40px);
+    opacity: 0;
+    animation: s6PolaroidIn 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s
+        forwards;
+    box-shadow:
+        3px 5px 18px rgba(0, 0, 0, 0.5),
+        0 0 3px rgba(0, 0, 0, 0.2);
+    clip-path: polygon(
+        0% 3%,
+        5% 0%,
+        10% 2%,
+        16% 0%,
+        22% 1.5%,
+        28% 0%,
+        34% 2%,
+        40% 0.5%,
+        46% 1.5%,
+        52% 0%,
+        58% 2%,
+        64% 0%,
+        70% 1%,
+        76% 0%,
+        82% 2%,
+        88% 0.5%,
+        94% 1.5%,
+        100% 0%,
+        100% 97%,
+        94% 100%,
+        88% 98%,
+        82% 100%,
+        76% 98.5%,
+        70% 100%,
+        64% 99%,
+        58% 100%,
+        52% 98%,
+        46% 100%,
+        40% 98.5%,
+        34% 100%,
+        28% 99%,
+        22% 100%,
+        16% 98.5%,
+        10% 100%,
+        5% 98%,
+        0% 100%
+    );
+}
+
+.s6-photo {
+    display: block;
+    width: clamp(140px, 42vw, 240px);
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+}
+
+@keyframes s6PolaroidIn {
+    to {
+        opacity: 1;
+        transform: rotate(-4deg) translateY(0);
+    }
+}
+
+/* ── Shooting Stars ── */
+
+.s6-stars-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.s6-star {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow:
+        0 0 4px 1px rgba(255, 255, 255, 0.9),
+        0 0 10px 2px rgba(255, 179, 209, 0.6);
+    animation: s6StarFall var(--s6-dur, 1s) linear forwards;
+}
+
+.s6-star::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--s6-tail, 35px);
+    height: 1.5px;
+    transform-origin: left center;
+    transform: rotate(-45deg);
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0.8),
+        rgba(255, 179, 209, 0.3),
+        transparent
+    );
+    border-radius: 1px;
+}
+
+.s6-star--big {
+    box-shadow:
+        0 0 6px 2px rgba(255, 255, 255, 0.95),
+        0 0 16px 4px rgba(255, 179, 209, 0.7),
+        0 0 28px 6px rgba(232, 121, 249, 0.3);
+}
+
+.s6-star--big::after {
+    height: 2.5px;
+}
+
+@keyframes s6StarFall {
+    0% {
+        opacity: 0;
+        transform: translate(0, 0);
+    }
+    10% {
+        opacity: 1;
+    }
+    85% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-110vw, 110vh);
+    }
+}
+
+/* ── Controls ── */
+
+.s6-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    padding: 12px 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.s6-pick-btn {
+    padding: 7px 16px;
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.8);
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-size: clamp(0.78rem, 2.5vw, 0.92rem);
+    border-radius: 6px;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+    white-space: nowrap;
+}
+
+.s6-pick-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.65);
+}
+
+.s6-hint {
+    width: 100%;
+    font-family: "Dancing Script", cursive;
+    font-size: clamp(0.75rem, 2.5vw, 0.95rem);
+    color: rgba(255, 179, 209, 0.75);
+    text-align: center;
+    font-style: italic;
+}
+
+.s6-play-btn {
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.s6-play-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: scale(1.1);
+}
+
+.s6-play-btn:active {
+    transform: scale(0.95);
+}
+
+/* ── Back button ── */
+
+.s6-back-btn {
+    position: absolute;
+    bottom: clamp(20px, 5vw, 36px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    background: rgba(255, 77, 141, 0.15);
+    border: 1px solid rgba(255, 77, 141, 0.35);
+    color: rgba(255, 255, 255, 0.85);
+    font-family: "Dancing Script", cursive;
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
+    padding: 10px 28px;
+    border-radius: 24px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    white-space: nowrap;
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.2s ease;
+}
+
+.s6-back-btn:hover {
+    background: rgba(255, 77, 141, 0.3);
+    border-color: rgba(255, 77, 141, 0.6);
+    transform: translateX(-50%) scale(1.05);
+}
+
+.s6-back-btn:active {
+    transform: translateX(-50%) scale(0.96);
 }

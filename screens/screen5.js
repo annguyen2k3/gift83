@@ -2,18 +2,37 @@
    Màn 5 – Mở thiệp & Lời chúc
 ══════════════════════════════════════════════════════ */
 
-const POEM_LINES = [
-    "Tháng 3, tháng của yêu thương",
-    "Hôm nay ngày 8, ánh dương rạng ngời",
-    "Chúc {name} xinh đẹp tuyệt vời",
-    "Luôn luôn vui vẻ, trọn đời an yên",
-    "Không còn lo lắng, muộn phiền",
-    "Bên trong hạnh phúc, nhiều tiền ngoài thân.",
+const POEMS = [
+    [
+        "Tháng 3, tháng của yêu thương",
+        "Hôm nay ngày 8, ánh dương rạng ngời",
+        "Chúc {name} xinh đẹp tuyệt vời",
+        "Luôn luôn vui vẻ, trọn đời an yên",
+        "Không còn lo lắng, muộn phiền",
+        "Bên trong hạnh phúc, nhiều tiền ngoài thân.",
+    ],
+    [
+        "Chúc {name} một ngày lễ trọn vẹn,",
+        "đầy ý nghĩa với những kỷ niệm",
+        "đẹp nhất. Chúc {name} luôn vui vẻ,",
+        "gặp nhiều may mắn, chúc {name}",
+        "mỗi ngày đều cười tươi.",
+        "",
+        "Chúc {name} ngày càng xinh",
+        "đẹp, giỏi giang, chúc {name} cuộc",
+        "sống đong đầy bao nhiêu hạnh",
+        "phúc đều là của {name}.",
+        "",
+        "Và đặc biệt là không còn buồn",
+        "phiền, tiêu cực, luôn an nhiên.",
+        "Mỗi ngày trôi qua đều là ngày",
+        "hạnh phúc nhất...",
+    ],
 ];
 
 function getRecipientName() {
     const params = new URLSearchParams(window.location.search);
-    return params.get("dear") || "bạn";
+    return params.get("dear") || "em";
 }
 
 function createParticleCanvas(container) {
@@ -154,10 +173,15 @@ export function initScreen5(container, onBack) {
     const poemContainer = document.createElement("div");
     poemContainer.className = "s5-poem";
 
-    POEM_LINES.forEach((line) => {
+    const chosenPoem = POEMS[Math.floor(Math.random() * POEMS.length)];
+    chosenPoem.forEach((line) => {
         const p = document.createElement("p");
         p.className = "s5-poem-line";
-        p.textContent = line.replace("{name}", name);
+        if (line === "") {
+            p.classList.add("s5-poem-spacer");
+        } else {
+            p.textContent = line.replace(/\{name\}/g, name);
+        }
         poemContainer.appendChild(p);
     });
     inner.appendChild(poemContainer);
@@ -195,17 +219,18 @@ export function initScreen5(container, onBack) {
 
         setTimeout(() => {
             const lines = poemContainer.querySelectorAll(".s5-poem-line");
+            const delay = lines.length > 8 ? 300 : 450;
             lines.forEach((line, i) => {
                 setTimeout(() => {
                     line.classList.add("s5-line-visible");
-                }, i * 450);
+                }, i * delay);
             });
 
             setTimeout(
                 () => {
                     signature.classList.add("s5-line-visible");
                 },
-                lines.length * 450 + 200,
+                lines.length * delay + 200,
             );
         }, 800);
     }

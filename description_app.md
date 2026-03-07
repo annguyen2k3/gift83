@@ -105,6 +105,35 @@ Vào màn 4
 
 ---
 
+### Màn 6 – Click vào Đĩa nhạc: Trình phát video chúc mừng
+
+#### Giao diện
+- **Khung phát video giả lập** với giao diện tối giản:
+  - **Màn chiếu** (display): Hiển thị nội dung text animation và ảnh theo thời gian audio.
+  - **Nút Play/Pause**: Bắt đầu/dừng phát audio và animation.
+  - **Nút "Chọn ảnh"**: Cho phép người dùng tải ảnh cá nhân lên.
+
+#### Audio & Timeline
+- Phát file `audio/gift_music.mp3` (17 giây).
+- **Giây 0–8 (Phase Text):** Nền hoa văn kim cương hồng, header "8/3 – HAPPY WOMEN'S DAY", giấy notebook với các dòng chữ xuất hiện lần lượt theo thời gian cấu hình:
+  - "CHÚC NHỮNG NGƯỜI PHỤ NỮ TUYỆT VỜI"
+  - "ĐANG XEM CLIP NÀY"
+  - "SẼ LUÔN TOẢ SÁNG"
+  - "NHƯ"
+  - Tên người nhận (từ URL `?dear=...` hoặc mặc định "bạn")
+- **Giây 9–17 (Phase Photo):** Nền gỗ, ảnh hiển thị trong khung giấy rách (torn paper / polaroid), xoay nhẹ -4°.
+
+#### Tương tác – Chọn ảnh
+- Nếu không chọn ảnh → dùng mặc định `img/avatar_nu.jpg`.
+- Khi chọn ảnh → reset player về đầu, load ảnh mới vào phase photo.
+
+#### Cấu hình thời gian
+- Thời gian xuất hiện mỗi dòng chữ nằm trong mảng `LINES` ở đầu file `screens/screen6.js`, dễ dàng điều chỉnh giá trị `at` (giây) để căn đúng audio.
+
+- **Chuyển về:** Nút quay lại → về Màn 3 (gifts).
+
+---
+
 ## Bảng màu & Ngôn ngữ thị giác
 
 ### Bảng màu chính
@@ -202,7 +231,8 @@ gift83/
 │   ├── screen2.js      # Màn 2 – Happy Women's Day
 │   ├── screen3.js      # Màn 3 – Không gian 3D hình cầu
 │   ├── screen4.js      # Màn 4 – Bó hoa ảnh cá nhân (Canvas composite)
-│   └── screen5.js      # Màn 5 – Mở thiệp & lời chúc
+│   ├── screen5.js      # Màn 5 – Mở thiệp & lời chúc
+│   └── screen6.js      # Màn 6 – Trình phát video chúc mừng
 ├── img/
 │   ├── canh_hoa_hong.png   # Ảnh cành hoa hồng (nền đen, dùng mix-blend-mode: screen)
 │   └── giay_goi_hoa.png    # Ảnh giấy gói hoa (nền trong suốt)

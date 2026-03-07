@@ -3,6 +3,7 @@ import { initScreen2 } from "./screens/screen2.js";
 import { initScreen3 } from "./screens/screen3.js";
 import { initScreen4 } from "./screens/screen4.js";
 import { initScreen5 } from "./screens/screen5.js";
+import { initScreen6 } from "./screens/screen6.js";
 
 const overlay = document.getElementById("transition-overlay");
 const destroyers = {};
@@ -45,11 +46,18 @@ function startScreen4() {
     );
 }
 
+function startScreen6() {
+    return initScreen6(document.getElementById("screen-6"), () =>
+        transitionTo(6, 3, () => startScreen3({ startAtGifts: true })),
+    );
+}
+
 function startScreen3(opts) {
     return initScreen3(
         document.getElementById("screen-3"),
         () => transitionTo(3, 4, startScreen4),
         () => transitionTo(3, 5, startScreen5),
+        () => transitionTo(3, 6, startScreen6),
         opts,
     );
 }
