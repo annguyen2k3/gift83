@@ -1,11 +1,9 @@
 import * as THREE from 'three';
 
 /* ══════════════════════════════════════════════════════
-   Màn 3 – Rose Heart Explosion → 3D Sphere → Gifts
+   Màn 3 – 3D Sphere → Gifts
 ══════════════════════════════════════════════════════ */
 
-const ROSE_HEART  = 'img/\u2014Pngtree\u2014pink and red rose flower_20399304.png';
-const PETAL_IMGS  = ['img/\u2014Pngtree\u2014warm rose petals falling on_7252943.png', 'img/canh_hoa_hong_hong.png'];
 const BOUQUET     = 'img/bo_hoa_hong.png';
 
 const HEART_PATHS = [
@@ -32,139 +30,7 @@ function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 function lerpN(a, b, t)  { return a + (b - a) * t; }
 
 /* ═══════════════════════════════════════
-   PHASE 1 – Rose Heart + Petal Explosion
-═══════════════════════════════════════ */
-
-function buildPhase1(container) {
-  const div = document.createElement('div');
-  div.id = 's3-phase1';
-  div.innerHTML = `<img id="s3-rose-heart" src="${ROSE_HEART}" alt="" draggable="false">`;
-  container.appendChild(div);
-  return div;
-}
-
-/* ─── Spawn 1 cánh hoa: opacity 0 → fade-in khi bay → fade-out ─── */
-function spawnCenterPetal(imgSrc, cx, cy, tx, ty, size, flyDur, delayMs, holdMs) {
-  const petal     = document.createElement('div');
-  petal.className = 's3-petal-fly';
-  const rot        = ((Math.random() - 0.5) * 540).toFixed(1);
-  const scaleLand  = (0.55 + Math.random() * 0.5).toFixed(2);
-  const fadeInDur  = Math.min(flyDur * 0.45, 0.35);
-  const fadeOutDur = 0.35;
-
-  petal.style.cssText = `
-    left:    ${cx - size / 2}px;
-    top:     ${cy - size / 2}px;
-    width:   ${size}px;
-    height:  ${size}px;
-    background: url('${imgSrc}') center / contain no-repeat;
-    opacity: 0;
-  `;
-  document.body.appendChild(petal);
-
-  /* Sau delay: bắt đầu bay + fade-in đồng thời */
-  const t1 = setTimeout(() => {
-    petal.style.transition = [
-      `transform ${flyDur.toFixed(2)}s cubic-bezier(0.12, 0.8, 0.3, 1)`,
-      `opacity   ${fadeInDur.toFixed(2)}s ease-out`,
-    ].join(', ');
-    requestAnimationFrame(() => {
-      petal.style.transform = `translate(${tx}px, ${ty}px) rotate(${rot}deg) scale(${scaleLand})`;
-      petal.style.opacity   = '1';
-    });
-
-    /* Sau khi bay xong + hold: fade-out */
-    const t2 = setTimeout(() => {
-      petal.style.transition = `opacity ${fadeOutDur}s ease-in`;
-      petal.style.opacity    = '0';
-      setTimeout(() => petal.remove(), (fadeOutDur + 0.3) * 1000);
-    }, flyDur * 1000 + holdMs);
-
-    petal._t2 = t2;
-  }, delayMs);
-
-  petal._t1 = t1;
-}
-
-function triggerExplosion(container, onDone) {
-  const heart    = container.querySelector('#s3-rose-heart');
-  const w        = window.innerWidth;
-  const h        = window.innerHeight;
-  const cx       = w / 2;
-  const cy       = h / 2;
-  const isMobile = w < 768;
-
-  /* Dừng animation tim – giữ hiển thị, chờ cánh hoa che phủ mới mờ */
-  heart.classList.remove('beating');
-  heart.style.animation = 'none';
-
-  /* ── Tham số lưới ── */
-  const cols    = isMobile ? 20 : 28;
-  const rows    = isMobile ? 22 : 24;
-  const total   = isMobile ? 1500 : 2700;
-  const HOLD_MS = 0;
-
-  /* Bán kính vùng spawn bên trong trái tim */
-  const heartR = Math.min(w * 0.32, h * 0.28, 200);
-
-  /* ── Nhóm A (~30%): đích nằm GẦN trung tâm – che kín trái tim ── */
-  const countA  = Math.round(total * 0.30);
-  const targetsA = [];
-  for (let i = 0; i < countA; i++) {
-    const a  = Math.random() * Math.PI * 2;
-    const rr = Math.sqrt(Math.random()) * heartR * 1.3;
-    targetsA.push({ fx: cx + rr * Math.cos(a), fy: cy + rr * Math.sin(a) * 0.85 });
-  }
-
-  /* ── Nhóm B (~70%): lưới phủ toàn màn hình ── */
-  const gridTargets = [];
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      const tx = (c / (cols - 1)) * (w * 1.15) - w * 0.075 - cx + (Math.random() - 0.5) * 30;
-      const ty = (r / (rows - 1)) * (h * 1.15) - h * 0.075 - cy + (Math.random() - 0.5) * 30;
-      gridTargets.push({ fx: cx + tx, fy: cy + ty });
-    }
-  }
-  gridTargets.sort(() => Math.random() - 0.5);
-  while (gridTargets.length < total - countA) {
-    gridTargets.push({
-      fx: cx + (Math.random() - 0.5) * w * 1.2,
-      fy: cy + (Math.random() - 0.5) * h * 1.2,
-    });
-  }
-
-  /* ── Gộp & xáo trộn ── */
-  const allTargets = [...targetsA, ...gridTargets.slice(0, total - countA)];
-  allTargets.sort(() => Math.random() - 0.5);
-
-  /* ── Spawn từng cánh từ vị trí ngẫu nhiên trong trái tim ── */
-  for (let i = 0; i < total; i++) {
-    const { fx, fy } = allTargets[i];
-    const imgSrc     = PETAL_IMGS[i % 2];
-    const size       = Math.round(12 + Math.random() * 15);
-    const flyDur     = 0.8 + Math.random() * 0.7;
-    const delayMs    = Math.floor((i / total) * 800);
-
-    const angle = Math.random() * Math.PI * 2;
-    const r     = Math.sqrt(Math.random()) * heartR;
-    const sx    = cx + r * Math.cos(angle);
-    const sy    = cy + r * Math.sin(angle) * 0.85;
-
-    spawnCenterPetal(imgSrc, sx, sy, fx - sx, fy - sy, size, flyDur, delayMs, HOLD_MS);
-  }
-
-  /* Trái tim mờ dần sau 1.2s – lúc này cánh hoa đã che phủ vùng trung tâm */
-  setTimeout(() => {
-    heart.style.transition = 'opacity 0.5s ease-in';
-    heart.style.opacity    = '0';
-  }, 1200);
-
-  /* onDone khi màn hình đã phủ kín */
-  setTimeout(onDone, 1800);
-}
-
-/* ═══════════════════════════════════════
-   PHASE 2 – Three.js 3D Heart Sphere
+   PHASE 1 – Three.js 3D Heart Sphere
 ═══════════════════════════════════════ */
 
 function buildThreeScene(container, onZoomComplete) {
@@ -575,74 +441,32 @@ export function initScreen3(container, onSelectBouquet, onSelectCard) {
     return id;
   };
 
-  /* ── Phase 1: show rose heart ── */
-  const phase1 = buildPhase1(container);
-
-  /* Sau 1.1s (ảnh xuất hiện xong), bắt đầu hiệu ứng đập tim */
-  addTimer(() => {
+  /* ── Phase 1: Three.js sphere (xuất hiện ngay) ── */
+  const ctrl = buildThreeScene(container, () => {
     if (destroyed) return;
-    const heart = container.querySelector('#s3-rose-heart');
-    if (heart) {
-      heart.style.opacity = '1';
-      heart.classList.add('beating');
-    }
-  }, 1100);
+    flashTransition(startPhase2);
+  });
+  threeCtrl = ctrl;
 
-  /* Sau 4s đập tim → nổ tung cánh hoa */
-  addTimer(() => {
-    if (destroyed) return;
-    triggerExplosion(container, () => {
-      if (destroyed) return;
-      /* Petals đang phủ màn hình → ẩn phase1, khởi động sphere ngay bên dưới */
-      phase1.style.transition = 'opacity 0.3s ease';
-      phase1.style.opacity    = '0';
-      addTimer(() => {
-        if (destroyed) return;
-        phase1.remove();
-        startPhase2();
-      }, 300);
-    });
-  }, 1100 + 4000);
+  let clickEnabled = false;
+  addTimer(() => { clickEnabled = true; }, 900);
 
-  /* ── Phase 2: Three.js sphere ── */
-  function startPhase2() {
-    /* Đảm bảo xóa sạch cánh hoa còn sót (nếu có) khi sphere đã hiện xong */
-    addTimer(() => {
-      document.querySelectorAll('.s3-petal-fly').forEach(el => {
-        clearTimeout(el._t1);
-        clearTimeout(el._t2);
-        el.remove();
-      });
-    }, 2200);
-
-    const ctrl = buildThreeScene(container, () => {
-      if (destroyed) return;
-      flashTransition(startPhase3);
-    });
-    threeCtrl = ctrl;
-
-    /* Delay click to avoid accidental trigger */
-    let clickEnabled = false;
-    addTimer(() => { clickEnabled = true; }, 900);
-
-    function handleClick(e) {
-      if (!clickEnabled) return;
-      const hint = container.querySelector('#s3-tap-hint');
-      if (hint) hint.style.pointerEvents = 'none';
-      container.removeEventListener('click',      handleClick);
-      container.removeEventListener('touchstart', handleClick);
-      ctrl.startZoom();
-    }
-
-    container.addEventListener('click',      handleClick);
-    container.addEventListener('touchstart', handleClick, { passive: true });
+  function handleClick(e) {
+    if (!clickEnabled) return;
+    const hint = container.querySelector('#s3-tap-hint');
+    if (hint) hint.style.pointerEvents = 'none';
+    container.removeEventListener('click',      handleClick);
+    container.removeEventListener('touchstart', handleClick);
+    ctrl.startZoom();
   }
 
-  /* ── Phase 3: gifts ── */
-  function startPhase3() {
+  container.addEventListener('click',      handleClick);
+  container.addEventListener('touchstart', handleClick, { passive: true });
+
+  /* ── Phase 2: gifts ── */
+  function startPhase2() {
     if (destroyed) return;
 
-    /* Clean up Three.js canvas elements */
     ['#s3-three-canvas', '#s3-glow-aura', '#s3-tap-hint'].forEach(sel => {
       container.querySelector(sel)?.remove();
     });
@@ -660,11 +484,6 @@ export function initScreen3(container, onSelectBouquet, onSelectCard) {
     destroyed = true;
     timers.forEach(clearTimeout);
     if (threeCtrl) { threeCtrl.destroy(); threeCtrl = null; }
-    document.querySelectorAll('.s3-petal-fly').forEach(el => {
-      clearTimeout(el._t1);
-      clearTimeout(el._t2);
-      el.remove();
-    });
     container.innerHTML = '';
   };
 }

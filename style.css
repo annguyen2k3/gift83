@@ -491,55 +491,7 @@ body {
   overflow: hidden;
 }
 
-/* ── Phase 1: Rose Heart ── */
-#s3-phase1 {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#s3-rose-heart {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) scale(0.7);
-  width: min(82vw, 76vh);
-  max-width: 560px;
-  opacity: 0;
-  animation: s3HeartIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards;
-  filter: drop-shadow(0 0 35px rgba(255, 77, 141, 0.6));
-  pointer-events: none;
-}
-
-@keyframes s3HeartIn {
-  from { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
-  to   { opacity: 1; transform: translate(-50%, -50%) scale(0.85); }
-}
-
-@keyframes s3HeartBeat {
-  0%   { transform: translate(-50%, -50%) scale(0.85); filter: drop-shadow(0 0 32px rgba(255,77,141,0.6)); }
-  14%  { transform: translate(-50%, -50%) scale(1.00); filter: drop-shadow(0 0 65px rgba(255,77,141,1.0)); }
-  28%  { transform: translate(-50%, -50%) scale(0.85); filter: drop-shadow(0 0 32px rgba(255,77,141,0.6)); }
-  42%  { transform: translate(-50%, -50%) scale(0.95); filter: drop-shadow(0 0 52px rgba(255,77,141,0.88)); }
-  70%  { transform: translate(-50%, -50%) scale(0.85); filter: drop-shadow(0 0 32px rgba(255,77,141,0.6)); }
-  100% { transform: translate(-50%, -50%) scale(0.85); filter: drop-shadow(0 0 32px rgba(255,77,141,0.6)); }
-}
-
-#s3-rose-heart.beating {
-  animation: s3HeartBeat 0.88s ease-in-out infinite !important;
-}
-
-.s3-petal-fly {
-  position: fixed;
-  pointer-events: none;
-  z-index: 999;
-  will-change: transform, opacity;
-  border-radius: 2px;
-}
-
-/* ── Phase 2: Three.js Sphere ── */
+/* ── Phase 1: Three.js Sphere ── */
 #s3-three-canvas {
   position: absolute;
   inset: 0;
