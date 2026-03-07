@@ -41,11 +41,7 @@ body {
     position: fixed;
     inset: 0;
     z-index: 200;
-    background: radial-gradient(
-        circle at center,
-        #1A0025 0%,
-        #0D0010 100%
-    );
+    background: radial-gradient(circle at center, #1a0025 0%, #0d0010 100%);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.65s ease;
@@ -961,7 +957,7 @@ body {
 
 .s5-poem-line {
     font-family: "Dancing Script", cursive;
-    font-size: clamp(0.95rem, 3.2vw, 1.35rem);
+    font-size: clamp(1.1rem, 3.8vw, 1.55rem);
     font-weight: 600;
     color: #fff;
     text-align: center;
@@ -1090,4 +1086,227 @@ body {
 
 .s5-back-btn:active {
     transform: translateX(-50%) scale(0.96);
+}
+
+/* ════════════════════════════════
+   SCREEN 4 – Bó hoa ảnh cá nhân
+════════════════════════════════ */
+
+#screen-4 {
+    overflow: hidden;
+}
+
+.s4-wrapper {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #ffb3d1 0%, #ffd6e7 50%, #fff5f8 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 16px 60px;
+    gap: clamp(8px, 2vh, 16px);
+}
+
+.s4-back-btn {
+    position: absolute;
+    bottom: clamp(20px, 5vw, 36px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    background: rgba(255, 77, 141, 0.15);
+    border: 1px solid rgba(255, 77, 141, 0.35);
+    color: rgba(255, 255, 255, 0.85);
+    font-family: "Dancing Script", cursive;
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
+    padding: 10px 28px;
+    border-radius: 24px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    white-space: nowrap;
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.2s ease;
+}
+
+.s4-back-btn:hover {
+    background: rgba(255, 77, 141, 0.3);
+    border-color: rgba(255, 77, 141, 0.6);
+    transform: translateX(-50%) scale(1.05);
+}
+
+.s4-back-btn:active {
+    transform: translateX(-50%) scale(0.96);
+}
+
+.s4-bouquet {
+    position: relative;
+    width: min(78vw, 380px);
+    aspect-ratio: 3 / 5;
+    max-height: 62vh;
+    flex-shrink: 0;
+    opacity: 0;
+    transform: scale(0.8) translateY(25px);
+    transition:
+        opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.s4-bouquet.s4-in {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+
+.s4-float {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    animation: s4Float 3s ease-in-out infinite;
+}
+
+@keyframes s4Float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+.s4-wrap {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.s4-wrap--bk {
+    z-index: 1;
+}
+
+.s4-wrap--ft {
+    z-index: 3;
+}
+
+.s4-flowers {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+}
+
+.s4-roses {
+    position: absolute;
+    inset: 0;
+}
+
+.s4-rose {
+    position: absolute;
+    height: 65%;
+    width: auto;
+    pointer-events: none;
+}
+
+.s4-circles {
+    position: absolute;
+    inset: 0;
+}
+
+.s4-user-img {
+    position: absolute;
+    height: auto;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.2));
+}
+
+.s4-btns {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+        opacity 0.6s ease 0.3s,
+        transform 0.6s ease 0.3s;
+}
+
+.s4-btns.s4-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.s4-pick-btn {
+    background: #ff4d8d;
+    color: #fff;
+    border: none;
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-size: clamp(0.88rem, 3.2vw, 1.08rem);
+    padding: 12px 30px;
+    border-radius: 28px;
+    cursor: pointer;
+    box-shadow:
+        0 0 18px rgba(255, 77, 141, 0.35),
+        0 4px 12px rgba(0, 0, 0, 0.12);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.s4-pick-btn:hover {
+    transform: scale(1.05);
+    box-shadow:
+        0 0 28px rgba(255, 77, 141, 0.55),
+        0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.s4-pick-btn:active {
+    transform: scale(0.96);
+}
+
+.s4-dl-btn {
+    background: rgba(255, 255, 255, 0.25);
+    color: #c2185b;
+    border: 2px solid #ff4d8d;
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-size: clamp(0.82rem, 2.8vw, 0.95rem);
+    padding: 10px 26px;
+    border-radius: 28px;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.s4-dl-btn:hover {
+    background: rgba(255, 77, 141, 0.1);
+}
+
+.s4-dl-btn:active {
+    transform: scale(0.96);
+}
+
+.s4-desc {
+    max-width: min(85vw, 400px);
+    text-align: center;
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-size: clamp(0.75rem, 2.5vw, 0.88rem);
+    font-style: italic;
+    color: rgba(180, 60, 100, 0.7);
+    line-height: 1.5;
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+        opacity 0.6s ease 0.5s,
+        transform 0.6s ease 0.5s;
+}
+
+.s4-btns.s4-in ~ .s4-desc {
+    opacity: 1;
+    transform: translateY(0);
 }

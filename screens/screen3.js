@@ -206,7 +206,7 @@ function buildThreeScene(container, onSelectBouquet, onSelectCard, opts = {}) {
 
     const hint = document.createElement("div");
     hint.id = "s3-tap-hint";
-    hint.textContent = "✨  Nhấn để mở quà  ✨";
+    hint.textContent = "✨  Vuốt để xoay  ✨\n✨  Nhấn để xem quà  ✨";
     container.appendChild(hint);
 
     /* ── Renderer ── */
@@ -764,8 +764,8 @@ function buildThreeScene(container, onSelectBouquet, onSelectCard, opts = {}) {
         canvasEl.style.cursor = "default";
         const type = hits[0].object.userData.type;
 
-        giftHint.classList.remove('visible');
-        backBtn.classList.remove('visible');
+        giftHint.classList.remove("visible");
+        backBtn.classList.remove("visible");
 
         setTimeout(() => {
             if (type === "bouquet") onSelectBouquet();
