@@ -16,16 +16,16 @@ const ROSES = [
 ];
 
 const CIRCLES = [
-    // Hàng 2 (phía sau, 5 ảnh) - rìa thấp hơn giữa
-    { x: 20, y: 29, r: 10, rot: -22, z: 1 },
-    { x: 80, y: 31, r: 10, rot: 35, z: 1 },
-    { x: 35, y: 20, r: 12, rot: -12, z: 2 },
-    { x: 65, y: 20, r: 12, rot: 12, z: 2 },
-    { x: 50, y: 20, r: 15, rot: 0, z: 3 },
-    // Hàng 1 (phía trước, 3 ảnh) - không có 2 rìa ngoài
-    { x: 36, y: 35, r: 15, rot: -9, z: 5 },
-    { x: 64, y: 35, r: 15, rot: 9, z: 5 },
-    { x: 50, y: 40, r: 19, rot: 0, z: 6 },
+    // Hàng 2 (phía sau, 5 ảnh) - rìa thấp hơn giữa — max-width: 96
+    { x: 20, y: 29, r: 10, rot: -22, z: 1, maxWidth: 96 },
+    { x: 80, y: 31, r: 10, rot: 35, z: 1, maxWidth: 96 },
+    { x: 35, y: 20, r: 12, rot: -12, z: 2, maxWidth: 96 },
+    { x: 65, y: 20, r: 12, rot: 12, z: 2, maxWidth: 96 },
+    { x: 50, y: 20, r: 15, rot: 0, z: 3, maxWidth: 96 },
+    // Hàng 1 (phía trước, 3 ảnh) — x50: 120, x36/x64: 115
+    { x: 36, y: 35, r: 11.5, rot: -9, z: 5, maxWidth: 115 },
+    { x: 64, y: 35, r: 11.5, rot: 9, z: 5, maxWidth: 115 },
+    { x: 50, y: 40, r: 19, rot: 0, z: 6, maxWidth: 120 },
 ];
 
 function loadImg(src) {
@@ -142,6 +142,7 @@ export function initScreen4(container, onBack) {
             img.style.left = c.x + "%";
             img.style.top = c.y + "%";
             img.style.width = c.r * 2 + "%";
+            if (c.maxWidth != null) img.style.maxWidth = c.maxWidth + "px";
             img.style.zIndex = c.z;
             img.style.opacity = "0";
             img.style.transform = `translate(-50%,-50%) rotate(${c.rot}deg) scale(0)`;
